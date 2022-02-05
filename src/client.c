@@ -50,8 +50,7 @@
 
 static char title[] = "rs2client317";
 
-// TODO: Put into struct
-bool skill_enabled[] = {
+static const bool SKILL_ENABLED[] = {
 	true, true, true, true, true, true, true, true, true, true, true,
 	true, true, true, true, true, true, true, true, false, true, false,
 	false, false, false
@@ -200,6 +199,11 @@ rs_result rsclient_error(rsclient *client, char *errmsg, bool exit)
 
 void rsclient_new(rsclient *client)
 {
+	if (client == NULL)
+		return;
+
+	memcpy(client->skill_enabled, SKILL_ENABLED, SKILLS_SZ);
+
 	for (size_t i = 0; i < TAB_INTERFACE_IDS_SZ; i++)
 		client->tab_interface_ids[i] = -1;
 
@@ -506,7 +510,7 @@ static rs_result rsclient_load_ttf(rsclient *client)
 	free(reg);
 	return RS_RESULT_OK;
 }
-/* Animation loop */
+// Animation loop
 static int rsclient_start(void *_client)
 {
 	rsclient *client = (rsclient *) _client;

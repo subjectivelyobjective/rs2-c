@@ -73,8 +73,6 @@
 
 extern const char *SKILL_NAMES[SKILLS_SZ];
 
-extern bool skill_enabled[SKILLS_SZ];
-
 typedef enum rs_result {
     RS_RESULT_OK = 0,
     RS_RESULT_ERROR,
@@ -137,7 +135,10 @@ typedef struct rsclient {
 	// jbuf login_stream;
 	bool effects_enabled;
 	int32_t open_interface_id;
+	bool skill_enabled[SKILLS_SZ];
 	int32_t skill_experience[SKILLS_SZ];
+	int32_t skill_level[SKILLS_SZ];
+	int32_t skill_max_level[SKILLS_SZ];
 	bool bool_872;
 	int32_t camera_jitter[CAMERA_SZ];
 	int32_t current_track_id;
@@ -156,7 +157,6 @@ typedef struct rsclient {
 	// jbuf player_appearance_data[MAX_ENTITY_COUNT];
 	int32_t waypoints[TILES_SZ][TILES_SZ];
 	int8_t animated_pixels[ANIMATED_PIXELS_SZ];
-	int32_t skill_level[SKILLS_SZ];
 	int64_t ignore_list_longs[IGNORE_LIST_SZ];
 	bool loading_error;
 	int32_t camera_freq[CAMERA_SZ];
@@ -191,7 +191,6 @@ typedef struct rsclient {
 	int32_t unknown_camera_var[CAMERA_SZ]; // undocumented
 	bool character_model_changed;
 	int32_t dialog_id;
-	int32_t skill_max_level[SKILLS_SZ];
 	int32_t default_settings[DEFAULT_SETTINGS_SZ];
 	bool character_edit_change_gender;
 	int32_t flashing_side_bar;
