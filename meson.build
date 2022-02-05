@@ -28,3 +28,4 @@ exe = executable(
   'rs2client317', sources,
   dependencies : deps,
   include_directories : incdir)
+
