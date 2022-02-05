@@ -1,0 +1,1 @@
+sources += files('gamefont.c', 'gameobjdef.c')
