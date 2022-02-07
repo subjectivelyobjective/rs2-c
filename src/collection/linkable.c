@@ -54,3 +54,4 @@ void linkable_free(linkable *node)
 	linkable_unlink(node);
 	free(node);
 }
+

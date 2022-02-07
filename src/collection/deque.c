@@ -150,3 +150,4 @@ void deque_free(deque *queue, bool free_nodes)
 	free(queue->tail);
 	free(queue);
 }
+
