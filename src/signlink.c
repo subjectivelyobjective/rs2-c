@@ -48,7 +48,10 @@ bool dir_exists(char *dirstr)
 {
 	DIR* loc = opendir(dirstr);
 	bool exists = loc != NULL;
-	closedir(loc);
+	
+	if (loc)
+		closedir(loc);
+
 	return exists;
 }
 

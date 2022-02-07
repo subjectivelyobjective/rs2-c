@@ -662,7 +662,8 @@ int main(int argc, char *argv[])
 	if (buffer_cache == NULL)
 		buffer_cache = init_buffer_cache();
 
-	rs_result res = rsclient_create_frame(client, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+	rs_result res = rsclient_create_frame(client, DEFAULT_WIDTH,
+					DEFAULT_HEIGHT);
 
 	if (res)
 		return rsclient_error(NULL, "Couldn't create client frame.",
@@ -671,11 +672,14 @@ int main(int argc, char *argv[])
 	rs_result ttf_load_err = rsclient_load_ttf(client);
 
 	if (ttf_load_err)
-		return rsclient_error(client, "Failed to load TTF fonts.", true);
+		return rsclient_error(client, "Failed to load TTF fonts.",
+						true);
 
 	SDL_Thread *thread_id = SDL_CreateThread(rsclient_start, "Rendering",
 					(void *) client);
 	SDL_WaitThread(thread_id, NULL);
+
+	printf("lol: %s\n", client->sign->cache_dir);
 
 	return rsclient_exit(client, EXIT_SUCCESS);
 }
