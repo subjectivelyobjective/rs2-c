@@ -679,8 +679,6 @@ int main(int argc, char *argv[])
 					(void *) client);
 	SDL_WaitThread(thread_id, NULL);
 
-	printf("lol: %s\n", client->sign->cache_dir);
-
 	return rsclient_exit(client, EXIT_SUCCESS);
 }
 
