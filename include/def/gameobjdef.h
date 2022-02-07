@@ -23,3 +23,4 @@
 extern bool gameobjdef_lowmem;
 
 #endif
+

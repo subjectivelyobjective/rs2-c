@@ -27,3 +27,4 @@ void deque_clear(deque *queue, bool also_free);
 void deque_free(deque *queue, bool free_nodes);
 
 #endif
+

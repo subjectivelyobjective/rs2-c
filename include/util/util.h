@@ -27,3 +27,4 @@
 char *rs_strconcat(const char *dest, const char *str);
 
 #endif
+

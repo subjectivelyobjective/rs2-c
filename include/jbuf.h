@@ -1,4 +1,5 @@
-/* Copyright (C) 2021-2022 subjectivelyobjective
+/*
+ * Copyright (C) 2021-2022 subjectivelyobjective
  *
  * This file is part of rs2client317.
  *
@@ -36,3 +37,4 @@ typedef struct jbuf {
 deque *init_buffer_cache(void);
 
 #endif
+

@@ -39,3 +39,4 @@ typedef struct gamefont {
 } gamefont;
 
 #endif
+

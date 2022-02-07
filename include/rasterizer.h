@@ -23,3 +23,4 @@
 extern bool rasterizer_lowmem;
 
 #endif
+
