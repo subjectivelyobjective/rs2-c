@@ -229,3 +229,4 @@ int isaac_test(void)
 	printf("MOD dcr: %s\n",cptx);
 	return 0;
 }
+

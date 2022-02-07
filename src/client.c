@@ -587,15 +587,17 @@ static int rsclient_start(void *_client)
 		count &= 0xff;
 
 		if (client->delay_time > 0)
-			client->fps = (1000 * ratio) / (client->delay_time * 256);
+			client->fps =
+				(1000 * ratio) / (client->delay_time * 256);
 
 		rsclient_process_drawing(client);
 
 		if (client->debug_requested) {
-			printf("ntime: %ld\n", now);
+			printf("ntime: %ju\n", (uintmax_t) now);
 			for (int i = 0; i < 10; i++) {
 				int32_t otim = ((opos - i - 1) + 20) % 10;
-				printf("otim%d:%ld\n", otim, client->otims[otim]);
+				printf("otim%d:%ju\n", otim, 
+					(uintmax_t) client->otims[otim]);
 			}
 
 			printf("fps:%d ratio: %d count: %d\n", client->fps,
@@ -677,3 +679,4 @@ int main(int argc, char *argv[])
 
 	return rsclient_exit(client, EXIT_SUCCESS);
 }
+

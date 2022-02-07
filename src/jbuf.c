@@ -38,3 +38,4 @@ deque *init_buffer_cache(void)
 
 	return buffer_cache;
 }
+

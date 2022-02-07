@@ -27,3 +27,4 @@ void draw_alpha_text_shadow(char *text, int32_t x, int32_t y,
 {
 	// TODO
 }
+
