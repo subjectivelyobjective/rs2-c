@@ -102,7 +102,7 @@ const char *SKILL_NAMES[] = {
 };
 
 static const char *TTF_PREFERENCE[] = {
-	"Helvetica", "Nimbus Sans L", "Nimbus Sans", "Liberation Sans",
+	"Helvetica", "Nimbus-Sans-L", "Nimbus-Sans", "Liberation-Sans",
 	"Roboto", "Arial"
 };
 
@@ -138,8 +138,11 @@ void cleanup(rsclient *client)
 	if (client != NULL && client->window != NULL)
 		SDL_DestroyWindow(client->window);
 
-	TTF_CloseFont(bold_ttf);
-	TTF_CloseFont(reg_ttf);
+	if (bold_ttf != NULL)
+		TTF_CloseFont(bold_ttf);
+	
+	if (reg_ttf != NULL)
+		TTF_CloseFont(reg_ttf);
 
 	TTF_Quit();
 	SDL_Quit();
@@ -469,7 +472,7 @@ static void rsclient_poll_sdl_events(rsclient *client)
 	}
 }
 
-static rs_result rsclient_load_ttf(rsclient *client)
+static rs_result rsclient_load_ttf(const rsclient *client)
 {
 	if (client == NULL || client->sign == NULL) {
 		fprintf(stderr, "Client or signlink is NULL.\n");
@@ -483,32 +486,62 @@ static rs_result rsclient_load_ttf(rsclient *client)
 		return RS_RESULT_ERROR;
 	}
 
+	const size_t RS_PATH_MAX = get_path_max();
+	char bold[RS_PATH_MAX];
+	char reg[RS_PATH_MAX];
 
-	char *bold = rs_strconcat(cache_dir, "nimbus-sans-l_bold.ttf");
-	char *reg = rs_strconcat(cache_dir, "nimbus-sans-l_regular.ttf");
+	for (size_t i = 0; i < ARRAY_SIZE(TTF_PREFERENCE); i++) {
+		bold[0] = '\0';
+		reg[0] = '\0';
 
-	if (bold == NULL || reg == NULL) {
-		fprintf(stderr, "TTF path is null.\n");
-		free(bold);
-		free(reg);
-		return RS_RESULT_ERROR;
+		const size_t BOLD_SZ = 
+			strnlen(TTF_PREFERENCE[i], RS_PATH_MAX) +
+			strlen("_bold.ttf") +
+			1;
+		const size_t REG_SZ =
+			strnlen(TTF_PREFERENCE[i], RS_PATH_MAX) +
+			strlen("_regular.ttf") +
+			1;
+
+		char bold_str[BOLD_SZ];
+		bold_str[0] = '\0';
+		strncat(bold_str, TTF_PREFERENCE[i], BOLD_SZ);
+		strcat(bold_str, "_bold.ttf");
+
+		char reg_str[REG_SZ];
+		reg_str[0] = '\0';
+		strncat(reg_str, TTF_PREFERENCE[i], REG_SZ);
+		strcat(reg_str, "_regular.ttf");
+
+		strncat(bold, cache_dir, strnlen(cache_dir, RS_PATH_MAX));
+		strncat(bold, bold_str, strnlen(bold_str, RS_PATH_MAX));
+
+		strncat(reg, cache_dir, strnlen(cache_dir, RS_PATH_MAX));
+		strncat(reg, reg_str, strnlen(reg_str, RS_PATH_MAX));
+
+		if (bold[0] == '\0' || reg[0] == '\0')
+			continue;
+
+		if (access(bold, F_OK) == 0 && access(reg, F_OK) == 0) {
+			if ((bold_ttf = TTF_OpenFont(bold, 13)) == NULL) 
+				continue;
+
+			if ((reg_ttf = TTF_OpenFont(reg, 13)) == NULL) {
+				// Bold font was loaded but regular failed
+				TTF_CloseFont(bold_ttf);
+				bold_ttf = NULL;
+				continue;
+			}
+
+			return RS_RESULT_OK; 
+		}
 	}
 
-	bold_ttf = TTF_OpenFont(bold, 13);
-	reg_ttf = TTF_OpenFont(reg, 13);
+	fprintf(stderr, "Failed to load a TTF font. SDL_ttf Error: %s\n",
+		TTF_GetError());
 
-	if  (bold_ttf == NULL || reg_ttf == NULL) {
-		fprintf(stderr,
-			"Failed to load a TTF font. SDL_ttf Error: %s\n",
-			TTF_GetError());
-		free(bold);
-		free(reg);
-		return RS_RESULT_ERROR;
-	}
+	return RS_RESULT_ERROR;
 
-	free(bold);
-	free(reg);
-	return RS_RESULT_OK;
 }
 // Animation loop
 static int rsclient_start(void *_client)
@@ -543,7 +576,8 @@ static int rsclient_start(void *_client)
 			ratio = i2;
 			delay = j2;
 		} else if (now > client->otims[opos]) {
-			ratio = (int32_t) (2560 * client->delay_time / (now - client->otims[opos]));
+			ratio = (int32_t) (2560 * client->delay_time /
+					(now - client->otims[opos]));
 		}
 
 		if (ratio < 25)
@@ -551,7 +585,8 @@ static int rsclient_start(void *_client)
 
 		if (ratio > 256) {
 			ratio = 256;
-			delay = (int32_t) (client->delay_time - (now - client->otims[opos]) / 10l);
+			delay = (int32_t) (client->delay_time -
+					(now - client->otims[opos]) / 10l);
 		}
 
 		if (delay > client->delay_time)
