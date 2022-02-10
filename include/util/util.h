@@ -24,7 +24,5 @@
 
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
 
-char *rs_strconcat(const char *dest, const char *str);
-
 #endif
 

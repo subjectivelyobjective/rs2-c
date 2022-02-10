@@ -15,7 +15,6 @@ subdir('src')
 subdir('src/collection')
 subdir('src/def')
 subdir('src/scene')
-subdir('src/util')
 
 cc = meson.get_compiler('c')
 
